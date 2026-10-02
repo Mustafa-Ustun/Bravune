@@ -1,0 +1,7 @@
+export interface EntityRepository<T> { list(customerId: string): Promise<T[]>; get(customerId: string, id: string): Promise<T | null>; create(customerId: string, value: Omit<T, 'id'>): Promise<T>; update(customerId: string, id: string, patch: Partial<T>): Promise<T | null>; delete(customerId: string, id: string): Promise<boolean> }
+export interface CareerProfileRepository { get(customerId: string): Promise<Record<string, unknown> | null>; save(customerId: string, profile: Record<string, unknown>): Promise<void> }
+export interface CvRepository extends EntityRepository<Record<string, unknown>> { createVersion(customerId: string, cvId: string, content: Record<string, unknown>): Promise<Record<string, unknown>>; listVersions(customerId: string, cvId: string): Promise<Record<string, unknown>[]>; getVersion(customerId: string, cvId: string, versionId: string): Promise<Record<string, unknown> | null> }
+export interface JobRepository extends EntityRepository<Record<string, unknown>> {}
+export interface ApplicationRepository extends EntityRepository<Record<string, unknown>> { addHistory(customerId: string, applicationId: string, entry: Record<string, unknown>): Promise<Record<string, unknown>>; history(customerId: string, applicationId: string): Promise<Record<string, unknown>[]> }
+export interface CustomerRepository { get(customerId: string): Promise<Record<string, unknown> | null>; ensure(customerId: string, email: string): Promise<void> }
+export interface SubscriptionRepository { get(customerId: string): Promise<Record<string, unknown> | null> }

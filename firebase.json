@@ -1,0 +1,30 @@
+{
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs22",
+    "ignore": [
+      "node_modules",
+      ".git",
+      "firebase-debug.log",
+      "firebase-debug.*",
+      "*.local"
+    ],
+    "predeploy": ["npm run build:functions"]
+  },
+  "firestore": {
+    "rules": "infrastructure/firebase/firestore.rules",
+    "indexes": "infrastructure/firebase/firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "infrastructure/firebase/storage.rules"
+  },
+  "hosting": {
+    "public": "hosting",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "/mcp", "function": { "functionId": "bravuneMcp", "region": "us-central1" } },
+      { "source": "/oauth/**", "function": { "functionId": "bravuneMcp", "region": "us-central1" } },
+      { "source": "/.well-known/**", "function": { "functionId": "bravuneMcp", "region": "us-central1" } }
+    ]
+  }
+}

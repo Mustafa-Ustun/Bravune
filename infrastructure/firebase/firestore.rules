@@ -1,0 +1,8 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // All application data is accessed through the authenticated API using Admin SDK.
+    // Direct client access is denied to keep authorization and subscription checks centralized.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

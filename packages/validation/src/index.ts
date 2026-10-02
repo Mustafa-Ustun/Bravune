@@ -1,0 +1,11 @@
+import { z } from 'zod';
+export const idSchema = z.string().min(1).max(128).regex(/^[A-Za-z0-9_-]+$/);
+const text = z.string().trim().min(1).max(10000);
+export const profileSchema = z.object({ personalInformation: z.record(z.unknown()).optional(), summary: z.string().max(10000).optional(), skills: z.array(z.record(z.unknown())).max(500).optional(), experience: z.array(z.record(z.unknown())).max(200).optional(), education: z.array(z.record(z.unknown())).max(200).optional(), projects: z.array(z.record(z.unknown())).max(500).optional(), certifications: z.array(z.record(z.unknown())).max(500).optional(), links: z.array(z.record(z.unknown())).max(200).optional() }).strict();
+export const cvSchema = z.object({ name: text.max(200), description: z.string().max(2000).optional(), selectedItems: z.record(z.array(idSchema)).optional() }).strict();
+export const jobSchema = z.object({ company: text.max(200), title: text.max(200), location: z.string().max(300).optional(), url: z.string().url().max(2048).optional(), description: z.string().max(20000).optional(), requirements: z.array(z.string().max(500)).max(200).optional(), salary: z.record(z.unknown()).optional(), notes: z.string().max(5000).optional() }).strict();
+export const jobPatchSchema = jobSchema.partial().refine(v => Object.keys(v).length > 0, 'At least one field is required');
+export const applicationSchema = z.object({ jobId: idSchema, cvId: idSchema.optional(), cvVersionId: idSchema.optional(), status: z.enum(['saved','applied','screening','interview','offer','rejected','withdrawn']).default('saved'), notes: z.string().max(5000).optional() }).strict();
+export const applicationPatchSchema = applicationSchema.omit({ status: true }).extend({ status: applicationSchema.shape.status.optional() }).partial().refine(v => Object.keys(v).length > 0, 'At least one field is required');
+export const statusSchema = z.object({ status: z.enum(['saved','applied','screening','interview','offer','rejected','withdrawn']), notes: z.string().max(5000).optional() }).strict();
+export const genericRecordSchema = z.record(z.unknown()).refine(v => Object.keys(v).length > 0, 'At least one field is required');
